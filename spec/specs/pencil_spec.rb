@@ -34,4 +34,23 @@ describe Pencil do
       expect(@paper).to eq('Initial text.text before white space. '), 'white space is not being written'
     end
   end
+
+  describe '#point_degradation' do
+    context 'degradation' do
+      it 'decreases by 1 when writing a lowercase letter'
+      it 'decreases by 2 when writing a capital letter'
+      it 'does not decrease when writing a space'
+      it 'does not decrease when writing a newline'
+    end
+
+    context 'pencil has a durability of 0' do
+      it 'writes a space for each character'
+      it 'does not have a durability less than 0'
+    end
+
+    context 'durability for partial text' do
+      it 'will write characters until it is dull'
+      it 'will not write an uppercase character if durability is 1'
+    end
+  end
 end
