@@ -55,7 +55,20 @@ describe Eraser do
     end
   end
 
-  describe '#durability' do
-    it 'will not erase more characters than eraser durability'
+  describe 'eraser degradation' do
+    context 'eraser durability greater than 0' do
+      it 'should degrade eraser by 1 for all non-white space characters'
+      it 'should not degrade when erasing white spaces'
+    end
+
+    context 'does not erase more than the durability' do
+      it 'will not erase more characters than eraser durability'
+      it 'should erase right to left'
+    end
+
+    context 'eraser durability is 0' do
+      it 'does not erase'
+      it 'does not have a length less than 0'
+    end
   end
 end
