@@ -97,4 +97,17 @@ describe Pencil do
       end
     end
   end
+
+  describe '#sharpen' do
+    context 'pencil length is greater than 0' do
+      it 'restores the pencil to the initial durability'
+      it 'decreases pencil length by 1'
+      it 'decreases the pencil length when the durability is already the default'
+    end
+
+    context 'pencil length is 0' do
+      it 'does not restore the pencil durability'
+      it 'does not have a length less than 0'
+    end
+  end
 end
