@@ -131,4 +131,19 @@ describe Pencil do
       end
     end
   end
+
+  describe '#edit' do
+    context 'replace erased text' do
+      context 'replacing text has the same character length as the deleted text' do
+        it 'replaces the deleted text'
+        it 'can replace deleted text at the beginning'
+        it 'can replace deleted text at the end'
+      end
+
+      context 'replacing text has more characters than the deleted text' do
+        it 'adds an "@" where the new character replaces an existing character'
+        it 'cannot create additional characters to the text'
+      end
+    end
+  end
 end
