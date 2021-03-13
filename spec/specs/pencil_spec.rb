@@ -1,5 +1,8 @@
 require_relative '../../lib/pencil'
 describe Pencil do
+  subject { described_class.new(100) }
+  it { is_expected.to have_attributes(durability: 100) }
+
   describe '#write' do
     before(:each) do
       @paper = ''
@@ -35,22 +38,63 @@ describe Pencil do
     end
   end
 
-  describe '#point_degradation' do
+  describe 'durability' do
+    before(:each) do
+      @paper = ''
+    end
+
     context 'degradation' do
-      it 'decreases by 1 when writing a lowercase letter'
-      it 'decreases by 2 when writing a capital letter'
-      it 'does not decrease when writing a space'
-      it 'does not decrease when writing a newline'
+      it 'decreases by 1 when writing a lowercase letter' do
+        subject.write(@paper, 'abc')
+        expect(subject.durability).to eq(97)
+      end
+
+      it 'decreases by 2 when writing a capital letter' do
+        subject.write(@paper, 'ABC')
+        expect(subject.durability).to eq(94)
+      end
+
+      it 'does not decrease when writing a space' do
+        subject.write(@paper, '   ')
+        expect(subject.durability).to eq(100), 'white space is degrading pencil'
+      end
+
+      it 'does not decrease when writing a newline' do
+        subject.write(@paper, "\n")
+        expect(subject.durability).to eq(100), 'new line is degrading pencil'
+      end
+
+      it 'numbers'
+      it 'special characters (non alpha)'
     end
 
     context 'pencil has a durability of 0' do
-      it 'writes a space for each character'
-      it 'does not have a durability less than 0'
+      before(:each) do
+        subject.durability = 0
+        subject.write(@paper, 'Test')
+      end
+
+      it 'writes a space for each character' do
+        expect(@paper).to eq('    '), 'white space is not being written'
+      end
+
+      it 'does not have a durability less than 0' do
+        expect(subject.durability).to eq(0), 'writing updated the durability when it should not have'
+      end
     end
 
     context 'durability for partial text' do
-      it 'will write characters until it is dull'
-      it 'will not write an uppercase character if durability is 1'
+      it 'will write characters until it is dull' do
+        subject.durability = 4
+        subject.write(@paper, 'Test')
+        expect(@paper).to eq('Tes ')
+      end
+
+      it 'will not write an uppercase character if durability is 1' do
+        subject.durability = 1
+        subject.write(@paper, 'A')
+        expect(@paper).to eq(' ')
+      end
     end
   end
 end
