@@ -1,7 +1,7 @@
 require_relative '../../lib/pencil'
 describe Pencil do
-  subject { described_class.new(100) }
-  it { is_expected.to have_attributes(durability: 100) }
+  subject { described_class.new(100, 10) }
+  it { is_expected.to have_attributes(durability: 100, length: 10) }
 
   describe '#write' do
     before(:each) do
@@ -100,14 +100,38 @@ describe Pencil do
 
   describe '#sharpen' do
     context 'pencil length is greater than 0' do
-      it 'restores the pencil to the initial durability'
-      it 'decreases pencil length by 1'
-      it 'decreases the pencil length when the durability is already the default'
+      it 'restores the pencil to the initial durability' do
+        subject.durability = 95
+        subject.sharpen
+        expect(subject.durability).to eq(100), 'Pencil was not sharpened'
+      end
+
+      it 'decreases pencil length by 1' do
+        subject.durability = 95
+        subject.sharpen
+        expect(subject.length).to eq(9), 'Pencil length was not decreased'
+      end
+
+      it 'decreases the pencil length when the durability is already the default' do
+        subject.sharpen
+        expect(subject.length).to eq(9), 'Pencil length was not decreased'
+      end
     end
 
     context 'pencil length is 0' do
-      it 'does not restore the pencil durability'
-      it 'does not have a length less than 0'
+      before(:each) do
+        subject.length = 0
+        subject.durability = 50
+        subject.sharpen
+      end
+
+      it 'does not restore the pencil durability' do
+        expect(subject.durability).to eq(50), 'Pencil was sharpened'
+      end
+
+      it 'does not have a length less than 0' do
+        expect(subject.length).to eq(0), 'length was updated'
+      end
     end
   end
 end

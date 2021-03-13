@@ -1,8 +1,10 @@
 class Pencil
-  attr_accessor :durability
+  attr_accessor :durability, :original_durability, :length
 
-  def initialize(durability)
-    @durability = durability
+  def initialize(durability, length)
+    @original_durability = durability
+    @durability = @original_durability
+    @length = length
   end
 
   def write(paper, text)
@@ -30,5 +32,12 @@ class Pencil
         end
       end
     end
+  end
+
+  def sharpen
+    return unless length.positive?
+
+    @length -= 1
+    @durability = @original_durability
   end
 end
