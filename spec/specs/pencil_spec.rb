@@ -135,14 +135,48 @@ describe Pencil do
   describe '#edit' do
     context 'replace erased text' do
       context 'replacing text has the same character length as the deleted text' do
-        it 'replaces the deleted text'
-        it 'can replace deleted text at the beginning'
-        it 'can replace deleted text at the end'
+        it 'replaces the deleted text' do
+          paper = 'An       a day keeps the doctor away'
+          subject.edit(paper, 'onion')
+          expect(paper).to eq('An onion a day keeps the doctor away')
+        end
+
+        it 'can replace deleted text at the beginning' do
+          paper = '   apple a day keeps the doctor away'
+          subject.edit(paper, 'An')
+          expect(paper).to eq('An apple a day keeps the doctor away')
+        end
+        it 'can replace deleted text at the end' do
+          paper = 'An apple a day keeps the doctor     '
+          subject.edit(paper, 'away')
+          expect(paper).to eq('An apple a day keeps the doctor away')
+        end
       end
 
       context 'replacing text has more characters than the deleted text' do
-        it 'adds an "@" where the new character replaces an existing character'
-        it 'cannot create additional characters to the text'
+        let(:paper) { 'An       a day keeps the doctor away' }
+        it 'adds an "@" where the new character replaces an existing character' do
+          subject.edit(paper, 'artichoke')
+          expect(paper).to eq('An artich@k@ay keeps the doctor away')
+        end
+        it 'replaces additional white space if the new character overlaps' do
+          subject.edit(paper, 'artichoke')
+          expect(paper).to eq('An artich@k@ay keeps the doctor away')
+        end
+
+        it 'cannot create additional characters to the text' do
+          paper = 'An apple a day keeps the doctor     '
+          subject.edit(paper, 'artichoke')
+          expect('An apple a day keeps the doctor arti')
+        end
+      end
+
+      context 'no erased text' do
+        it 'does not edit if there is no erased text' do
+          paper = 'An apple a day keeps the doctor away'
+          subject.edit(paper, 'onion')
+          expect(paper).to eq('An apple a day keeps the doctor away')
+        end
       end
     end
   end

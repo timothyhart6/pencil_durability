@@ -44,4 +44,22 @@ class Pencil
     @length -= 1
     @durability = @original_durability
   end
+
+  def edit(paper, replacing_text)
+    erased_text_index = paper.index('  ')
+    return if erased_text_index.nil?
+
+    erased_text_index += 1 if erased_text_index.positive?
+    i = 0
+    until i == replacing_text.length
+      if paper[erased_text_index] == ' '
+        paper[erased_text_index] = replacing_text[i]
+      else
+        paper[erased_text_index] = '@'
+      end
+
+      erased_text_index += 1
+      i += 1
+    end
+  end
 end
