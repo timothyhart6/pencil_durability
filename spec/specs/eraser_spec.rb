@@ -1,10 +1,8 @@
-require_relative '../../lib/eraser'
+require_relative '../../lib/pencil'
 
 describe Eraser do
-  subject { described_class.new(200) }
-
+  subject { Pencil.new(100, 10, 200) }
   let(:paper) { 'Text for testing.' }
-  it { is_expected.to have_attributes(durability: 200) }
 
   describe '#erase' do
     context 'text is erased' do
@@ -67,23 +65,23 @@ describe Eraser do
     context 'eraser durability greater than 0' do
       it 'should degrade eraser by 1 for all non-white space characters' do
         subject.erase(paper, 'Text')
-        expect(subject.durability).to eq(196)
+        expect(subject.eraser_durability).to eq(196)
       end
       it 'should not degrade when erasing white spaces' do
         subject.erase(paper, ' ')
-        expect(subject.durability).to eq(200), 'White space should have have degraded durability'
+        expect(subject.eraser_durability).to eq(200), 'White space should have have degraded durability'
       end
 
       it 'should not include duplicate words in degrade count' do
         paper = 'Test Test Test'
         subject.erase(paper, 'Test')
-        expect(subject.durability).to eq(196), 'duplicate text counted against durability'
+        expect(subject.eraser_durability).to eq(196), 'duplicate text counted against durability'
       end
     end
 
     context 'does not erase more than the durability' do
       before(:each) do
-        subject.durability = 3
+        subject.eraser_durability = 3
         subject.erase(paper, 'Text')
       end
 
@@ -104,7 +102,7 @@ describe Eraser do
 
     context 'eraser durability is 0' do
       before(:each) do
-        subject.durability = 0
+        subject.eraser_durability = 0
         subject.erase(paper, 'Text')
       end
 
@@ -113,7 +111,7 @@ describe Eraser do
       end
 
       it 'does not have a durability less than 0' do
-        expect(subject.durability).to be(0), 'Durability should not have changed'
+        expect(subject.eraser_durability).to be(0), 'Durability should not have changed'
       end
     end
   end

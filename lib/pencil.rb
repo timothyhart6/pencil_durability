@@ -1,10 +1,14 @@
-class Pencil
-  attr_accessor :durability, :original_durability, :length
+require_relative 'eraser'
 
-  def initialize(durability, length)
+class Pencil
+  include Eraser
+  attr_accessor :durability, :original_durability, :length, :eraser_durability
+
+  def initialize(durability, length, eraser_durability)
     @original_durability = durability
     @durability = @original_durability
     @length = length
+    @eraser_durability = eraser_durability
   end
 
   def write(paper, text)

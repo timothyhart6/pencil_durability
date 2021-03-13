@@ -2,8 +2,8 @@ require_relative '../../lib/pencil'
 describe Pencil do
   let(:paper) { '' }
 
-  subject { described_class.new(100, 10) }
-  it { is_expected.to have_attributes(durability: 100, length: 10) }
+  subject { described_class.new(100, 10, 200) }
+  it { is_expected.to have_attributes(durability: 100, length: 10, eraser_durability: 200) }
 
   describe '#write' do
     before(:each) do
