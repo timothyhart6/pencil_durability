@@ -1,9 +1,12 @@
 require_relative '../../lib/eraser'
 
 describe Eraser do
-  describe '#erase' do
-    let(:paper) { 'Text for testing.' }
+  subject { described_class.new(200) }
 
+  let(:paper) { 'Text for testing.' }
+  it { is_expected.to have_attributes(durability: 200) }
+
+  describe '#erase' do
     context 'text is erased' do
       it 'only erases the specified text' do
         subject.erase(paper, 'for')
@@ -29,12 +32,17 @@ describe Eraser do
     context 'text is not erased' do
       it 'will not erase text that does not match' do
         subject.erase(paper, 'Txt')
-        expect(paper).to eq('Text for testing.'), 'should not have deleted text'
+        expect(paper).to eq('Text for testing.'), 'Text was deleted'
       end
 
       it 'is case sensative' do
         subject.erase(paper, 'text')
-        expect(paper).to eq('Text for testing.'), 'Deleted uppercase text'
+        expect(paper).to eq('Text for testing.'), 'Uppercase text was deleted'
+      end
+
+      it ' does not delete white space' do
+        subject.erase(paper, ' ')
+        expect(paper).to eq('Text for testing.'), 'White space was deleted'
       end
     end
 
@@ -57,18 +65,56 @@ describe Eraser do
 
   describe 'eraser degradation' do
     context 'eraser durability greater than 0' do
-      it 'should degrade eraser by 1 for all non-white space characters'
-      it 'should not degrade when erasing white spaces'
+      it 'should degrade eraser by 1 for all non-white space characters' do
+        subject.erase(paper, 'Text')
+        expect(subject.durability).to eq(196)
+      end
+      it 'should not degrade when erasing white spaces' do
+        subject.erase(paper, ' ')
+        expect(subject.durability).to eq(200), 'White space should have have degraded durability'
+      end
+
+      it 'should not include duplicate words in degrade count' do
+        paper = 'Test Test Test'
+        subject.erase(paper, 'Test')
+        expect(subject.durability).to eq(196), 'duplicate text counted against durability'
+      end
     end
 
     context 'does not erase more than the durability' do
-      it 'will not erase more characters than eraser durability'
-      it 'should erase right to left'
+      before(:each) do
+        subject.durability = 3
+        subject.erase(paper, 'Text')
+      end
+
+      it 'will not erase more characters than eraser durability' do
+        expect(paper).to eq('T    for testing.')
+      end
+
+      it 'should erase right to left' do
+        expect(paper).to eq('T    for testing.')
+      end
+
+      it 'should not erase text connected from both ends' do
+        paper = 'st filler text Te'
+        subject.erase(paper, 'Test')
+        expect(paper).to eq('st filler text Te')
+      end
     end
 
     context 'eraser durability is 0' do
-      it 'does not erase'
-      it 'does not have a length less than 0'
+      before(:each) do
+        subject.durability = 0
+        subject.erase(paper, 'Text')
+      end
+
+      it 'does not erase' do
+        expect(paper).to eq('Text for testing.'), 'Text should not have been erased'
+      end
+
+      it 'does not have a durability less than 0' do
+        expect(subject.durability).to be(0), 'Durability should not have changed'
+      end
     end
   end
 end
