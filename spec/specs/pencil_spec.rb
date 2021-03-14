@@ -60,9 +60,6 @@ describe Pencil do
         subject.write(paper, "\n")
         expect(subject.durability).to eq(100), 'new line is degrading pencil'
       end
-
-      it 'numbers'
-      it 'special characters (non alpha)'
     end
 
     context 'pencil has a durability of 0' do
