@@ -143,6 +143,7 @@ describe Pencil do
           subject.edit(paper, 'An')
           expect(paper).to eq('An apple a day keeps the doctor away')
         end
+
         it 'can replace deleted text at the end' do
           paper = 'An apple a day keeps the doctor     '
           subject.edit(paper, 'away')
@@ -154,17 +155,18 @@ describe Pencil do
         let(:paper) { 'An       a day keeps the doctor away' }
         it 'adds an "@" where the new character replaces an existing character' do
           subject.edit(paper, 'artichoke')
-          expect(paper).to eq('An artich@k@ay keeps the doctor away')
+          expect(paper).to eq('An artich@k@ay keeps the doctor away'), 'collisions may not be handled properly'
         end
+
         it 'replaces additional white space if the new character overlaps' do
           subject.edit(paper, 'artichoke')
-          expect(paper).to eq('An artich@k@ay keeps the doctor away')
+          expect(paper).to eq('An artich@k@ay keeps the doctor away'), 'white space should be overridden with new'
         end
 
         it 'cannot create additional characters to the text' do
           paper = 'An apple a day keeps the doctor     '
           subject.edit(paper, 'artichoke')
-          expect('An apple a day keeps the doctor arti')
+          expect(paper).to eq('An apple a day keeps the doctor arti'), 'edit added additional characters'
         end
       end
 
@@ -172,7 +174,7 @@ describe Pencil do
         it 'does not edit if there is no erased text' do
           paper = 'An apple a day keeps the doctor away'
           subject.edit(paper, 'onion')
-          expect(paper).to eq('An apple a day keeps the doctor away')
+          expect(paper).to eq('An apple a day keeps the doctor away'), 'should not have updated'
         end
       end
     end

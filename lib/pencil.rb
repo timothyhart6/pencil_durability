@@ -27,9 +27,6 @@ class Pencil
             @durability -= 2
             paper << char
           end
-        elsif char.match(/[[:alpha:]]/) && char == char.downcase
-          @durability -= 1
-          paper << char
         else
           @durability -= 1
           paper << char
@@ -54,6 +51,8 @@ class Pencil
     until i == replacing_text.length
       if paper[erased_text_index] == ' '
         paper[erased_text_index] = replacing_text[i]
+      elsif paper[erased_text_index].nil?
+        return
       else
         paper[erased_text_index] = '@'
       end
